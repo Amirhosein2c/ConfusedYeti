@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Babylon.js Playground</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+
+  <!-- Babylon globals (kept so window.BABYLON is available if your app expects it) -->
+  <script src="https://assets.babylonjs.com/generated/Assets.js"></script>
+  <script src="https://cdn.babylonjs.com/recast.js"></script>
+  <script src="https://cdn.babylonjs.com/ammo.js"></script>
+  <script src="https://cdn.babylonjs.com/havok/HavokPhysics_umd.js"></script>
+  <script src="https://cdn.babylonjs.com/cannon.js"></script>
+  <script src="https://cdn.babylonjs.com/Oimo.js"></script>
+  <script src="https://cdn.babylonjs.com/earcut.min.js"></script>
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="https://cdn.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+  <script src="https://cdn.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+  <script src="https://cdn.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+  <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+  <script src="https://cdn.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+  <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
+  <script src="https://cdn.babylonjs.com/addons/babylonjs.addons.min.js"></script>
+  <script src="https://cdn.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+
+  <style>
+    html,body,#renderCanvas{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:#000}
+  </style>
+</head>
+<body>
+  <canvas id="renderCanvas"></canvas>
+  <script type="module">
+    // Turn bundle text into a module URL
+    const code = "// snapshot:index.js\nvar createScene = function() {\n  var scene = new BABYLON.Scene(engine);\n  var camera = new BABYLON.ArcRotateCamera(\"camera\", BABYLON.Tools.ToRadians(0), BABYLON.Tools.ToRadians(57.3), 10, BABYLON.Vector3.Zero(), scene);\n  camera.attachControl(canvas, true);\n  var light = new BABYLON.HemisphericLight(\"light\", new BABYLON.Vector3(0, 100, 0), scene);\n  light.intensity = 0.5;\n  var ground = BABYLON.MeshBuilder.CreateGround(\"ground\", { width: 10, height: 10 }, scene);\n  var groundMaterial = new BABYLON.StandardMaterial(\"Ground Material\", scene);\n  groundMaterial.diffuseColor = BABYLON.Color3.Blue();\n  ground.material = groundMaterial;\n  let groundTexture = new BABYLON.Texture(Assets.textures.checkerboard_basecolor_png.path, scene);\n  groundMaterial.diffuseTexture = groundTexture;\n  var skybox = BABYLON.MeshBuilder.CreateBox(\"skyBox\", { size: 1e3 }, scene);\n  var skyboxMaterial = new BABYLON.StandardMaterial(\"skyBox\", scene);\n  skyboxMaterial.backFaceCulling = false;\n  skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture(\"textures/skybox\", scene);\n  skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;\n  skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);\n  skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);\n  skybox.material = skyboxMaterial;\n  BABYLON.ImportMeshAsync(\n    Assets.meshes.Yeti.rootUrl + Assets.meshes.Yeti.filename,\n    scene,\n    { meshNames: \"\" }\n  ).then((result) => {\n    result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1);\n  });\n  return scene;\n};\nexport {\n  createScene\n};\n//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsic25hcHNob3Q6aW5kZXguanMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImV4cG9ydCBjb25zdCBjcmVhdGVTY2VuZSA9IGZ1bmN0aW9uICgpIHtcbiAgICAvLyBUaGlzIGNyZWF0ZXMgYSBiYXNpYyBCYWJ5bG9uIFNjZW5lIG9iamVjdCAobm9uLW1lc2gpXG4gICAgdmFyIHNjZW5lID0gbmV3IEJBQllMT04uU2NlbmUoZW5naW5lKTtcblxuICAgIC8vIC8vIFRoaXMgY3JlYXRlcyBhbmQgcG9zaXRpb25zIGEgZnJlZSBjYW1lcmEgKG5vbi1tZXNoKVxuICAgIC8vIHZhciBjYW1lcmEgPSBuZXcgQkFCWUxPTi5GcmVlQ2FtZXJhKFwiY2FtZXJhMVwiLCBuZXcgQkFCWUxPTi5WZWN0b3IzKDAsIDUsIC0xNSksIHNjZW5lKTtcblxuICAgIC8vIC8vIFRoaXMgdGFyZ2V0cyB0aGUgY2FtZXJhIHRvIHNjZW5lIG9yaWdpblxuICAgIC8vIGNhbWVyYS5zZXRUYXJnZXQoQkFCWUxPTi5WZWN0b3IzLlplcm8oKSk7XG5cbiAgICB2YXIgY2FtZXJhID0gbmV3IEJBQllMT04uQXJjUm90YXRlQ2FtZXJhKFwiY2FtZXJhXCIsIEJBQllMT04uVG9vbHMuVG9SYWRpYW5zKDApLCBCQUJZTE9OLlRvb2xzLlRvUmFkaWFucyg1Ny4zKSwgMTAsIEJBQllMT04uVmVjdG9yMy5aZXJvKCksIHNjZW5lKTtcbiAgICBjYW1lcmEuYXR0YWNoQ29udHJvbChjYW52YXMsIHRydWUpO1xuXG4gICAgLy8gLy8gVGhpcyBhdHRhY2hlcyB0aGUgY2FtZXJhIHRvIHRoZSBjYW52YXNcbiAgICAvLyBjYW1lcmEuYXR0YWNoQ29udHJvbChjYW52YXMsIHRydWUpO1xuXG4gICAgLy8gVGhpcyBjcmVhdGVzIGEgbGlnaHQsIGFpbWluZyAwLDEsMCAtIHRvIHRoZSBza3kgKG5vbi1tZXNoKVxuICAgIHZhciBsaWdodCA9IG5ldyBCQUJZTE9OLkhlbWlzcGhlcmljTGlnaHQoXCJsaWdodFwiLCBuZXcgQkFCWUxPTi5WZWN0b3IzKDAsIDEwMCwgMCksIHNjZW5lKTtcblxuICAgIC8vIERlZmF1bHQgaW50ZW5zaXR5IGlzIDEuIExldCdzIGRpbSB0aGUgbGlnaHQgYSBzbWFsbCBhbW91bnRcbiAgICBsaWdodC5pbnRlbnNpdHkgPSAwLjU7XG5cbiAgICAvLyAvLyBPdXIgYnVpbHQtaW4gJ3NwaGVyZScgc2hhcGUuXG4gICAgLy8gdmFyIHNwaGVyZSA9IEJBQllMT04uTWVzaEJ1aWxkZXIuQ3JlYXRlU3BoZXJlKFwic3BoZXJlXCIsIHtkaWFtZXRlcjogMSwgc2VnbWVudHM6IDEwfSwgc2NlbmUpO1xuXG4gICAgLy8gLy8gTW92ZSB0aGUgc3BoZXJlIHVwd2FyZCAxLzIgaXRzIGhlaWdodFxuICAgIC8vIHNwaGVyZS5wb3NpdGlvbi55ID0gMztcblxuICAgIC8vIE91ciBidWlsdC1pbiAnZ3JvdW5kJyBzaGFwZS5cbiAgICB2YXIgZ3JvdW5kID0gQkFCWUxPTi5NZXNoQnVpbGRlci5DcmVhdGVHcm91bmQoXCJncm91bmRcIiwge3dpZHRoOiAxMCwgaGVpZ2h0OiAxMH0sIHNjZW5lKTtcblxuICAgIHZhciBncm91bmRNYXRlcmlhbCA9IG5ldyBCQUJZTE9OLlN0YW5kYXJkTWF0ZXJpYWwoXCJHcm91bmQgTWF0ZXJpYWxcIiwgc2NlbmUpO1xuICAgIGdyb3VuZE1hdGVyaWFsLmRpZmZ1c2VDb2xvciA9IEJBQllMT04uQ29sb3IzLkJsdWUoKTtcbiAgICBncm91bmQubWF0ZXJpYWwgPSBncm91bmRNYXRlcmlhbDtcblxuICAgIGxldCBncm91bmRUZXh0dXJlID0gbmV3IEJBQllMT04uVGV4dHVyZShBc3NldHMudGV4dHVyZXMuY2hlY2tlcmJvYXJkX2Jhc2Vjb2xvcl9wbmcucGF0aCwgc2NlbmUpO1xuICAgIGdyb3VuZE1hdGVyaWFsLmRpZmZ1c2VUZXh0dXJlID0gZ3JvdW5kVGV4dHVyZTtcblxuICAgIHZhciBza3lib3ggPSBCQUJZTE9OLk1lc2hCdWlsZGVyLkNyZWF0ZUJveChcInNreUJveFwiLCB7c2l6ZToxMDAwLjB9LCBzY2VuZSk7XG4gICAgdmFyIHNreWJveE1hdGVyaWFsID0gbmV3IEJBQllMT04uU3RhbmRhcmRNYXRlcmlhbChcInNreUJveFwiLCBzY2VuZSk7XG4gICAgc2t5Ym94TWF0ZXJpYWwuYmFja0ZhY2VDdWxsaW5nID0gZmFsc2U7XG4gICAgc2t5Ym94TWF0ZXJpYWwucmVmbGVjdGlvblRleHR1cmUgPSBuZXcgQkFCWUxPTi5DdWJlVGV4dHVyZShcInRleHR1cmVzL3NreWJveFwiLCBzY2VuZSk7XG4gICAgc2t5Ym94TWF0ZXJpYWwucmVmbGVjdGlvblRleHR1cmUuY29vcmRpbmF0ZXNNb2RlID0gQkFCWUxPTi5UZXh0dXJlLlNLWUJPWF9NT0RFO1xuICAgIHNreWJveE1hdGVyaWFsLmRpZmZ1c2VDb2xvciA9IG5ldyBCQUJZTE9OLkNvbG9yMygwLCAwLCAwKTtcbiAgICBza3lib3hNYXRlcmlhbC5zcGVjdWxhckNvbG9yID0gbmV3IEJBQllMT04uQ29sb3IzKDAsIDAsIDApOyBza3lib3gubWF0ZXJpYWwgPSBza3lib3hNYXRlcmlhbDtcblxuICAgIC8vIEJBQllMT04uSW1wb3J0TWVzaEFzeW5jKFwiaHR0cHM6Ly9hc3NldHMuYmFieWxvbmpzLmNvbS9tZXNoZXMvSFZHaXJsLmdsYlwiLCBzY2VuZSkudGhlbiggKHttZXNoZXMsIHBhcnRpY2xlU3lzdGVtcywgc2tlbGV0b25zfSkgPT4ge1xuICAgIC8vICAgICB2YXIgaGVybyA9IG1lc2hlc1swXTtcbiAgICAvLyAgICAgaGVyby5zY2FsaW5nLnNjYWxlSW5QbGFjZSgwLjIpO1xuICAgIC8vICAgICBjb25zdCBzYW1iYUFuaW0gPSBzY2VuZS5nZXRBbmltYXRpb25Hcm91cEJ5TmFtZShcIlNhbWJhXCIpO1xuICAgIC8vICAgICBzYW1iYUFuaW0uc3RhcnQodHJ1ZSwgMS4wLCBzYW1iYUFuaW0uZnJvbSwgc2FtYmFBbmltLnRvLCBmYWxzZSk7XG4gICAgLy8gICAgIGhlcm8ucG9zaXRpb24ueCA9IDI7XG4gICAgLy8gfSk7XG5cbiAgICBCQUJZTE9OLkltcG9ydE1lc2hBc3luYyhBc3NldHMubWVzaGVzLllldGkucm9vdFVybCArIEFzc2V0cy5tZXNoZXMuWWV0aS5maWxlbmFtZSwgXG4gICAgc2NlbmUsIFxuICAgIHsgbWVzaE5hbWVzOiBcIlwiIH0pXG4gICAgLnRoZW4oKHJlc3VsdCk9PiB7XG4gICAgcmVzdWx0Lm1lc2hlc1swXS5zY2FsaW5nID0gbmV3IEJBQllMT04uVmVjdG9yMygwLjEsIDAuMSwgMC4xKTsgXG4gICAgfSk7XG5cbiAgICByZXR1cm4gc2NlbmU7XG59O1xuLy8jIHNvdXJjZVVSTD1maWxlOi8vL3BnL2luZGV4LmpzIl0sCiAgIm1hcHBpbmdzIjogIjtBQUFPLElBQU0sY0FBYyxXQUFZO0FBRW5DLE1BQUksUUFBUSxJQUFJLFFBQVEsTUFBTSxNQUFNO0FBUXBDLE1BQUksU0FBUyxJQUFJLFFBQVEsZ0JBQWdCLFVBQVUsUUFBUSxNQUFNLFVBQVUsQ0FBQyxHQUFHLFFBQVEsTUFBTSxVQUFVLElBQUksR0FBRyxJQUFJLFFBQVEsUUFBUSxLQUFLLEdBQUcsS0FBSztBQUMvSSxTQUFPLGNBQWMsUUFBUSxJQUFJO0FBTWpDLE1BQUksUUFBUSxJQUFJLFFBQVEsaUJBQWlCLFNBQVMsSUFBSSxRQUFRLFFBQVEsR0FBRyxLQUFLLENBQUMsR0FBRyxLQUFLO0FBR3ZGLFFBQU0sWUFBWTtBQVNsQixNQUFJLFNBQVMsUUFBUSxZQUFZLGFBQWEsVUFBVSxFQUFDLE9BQU8sSUFBSSxRQUFRLEdBQUUsR0FBRyxLQUFLO0FBRXRGLE1BQUksaUJBQWlCLElBQUksUUFBUSxpQkFBaUIsbUJBQW1CLEtBQUs7QUFDMUUsaUJBQWUsZUFBZSxRQUFRLE9BQU8sS0FBSztBQUNsRCxTQUFPLFdBQVc7QUFFbEIsTUFBSSxnQkFBZ0IsSUFBSSxRQUFRLFFBQVEsT0FBTyxTQUFTLDJCQUEyQixNQUFNLEtBQUs7QUFDOUYsaUJBQWUsaUJBQWlCO0FBRWhDLE1BQUksU0FBUyxRQUFRLFlBQVksVUFBVSxVQUFVLEVBQUMsTUFBSyxJQUFNLEdBQUcsS0FBSztBQUN6RSxNQUFJLGlCQUFpQixJQUFJLFFBQVEsaUJBQWlCLFVBQVUsS0FBSztBQUNqRSxpQkFBZSxrQkFBa0I7QUFDakMsaUJBQWUsb0JBQW9CLElBQUksUUFBUSxZQUFZLG1CQUFtQixLQUFLO0FBQ25GLGlCQUFlLGtCQUFrQixrQkFBa0IsUUFBUSxRQUFRO0FBQ25FLGlCQUFlLGVBQWUsSUFBSSxRQUFRLE9BQU8sR0FBRyxHQUFHLENBQUM7QUFDeEQsaUJBQWUsZ0JBQWdCLElBQUksUUFBUSxPQUFPLEdBQUcsR0FBRyxDQUFDO0FBQUcsU0FBTyxXQUFXO0FBVTlFLFVBQVE7QUFBQSxJQUFnQixPQUFPLE9BQU8sS0FBSyxVQUFVLE9BQU8sT0FBTyxLQUFLO0FBQUEsSUFDeEU7QUFBQSxJQUNBLEVBQUUsV0FBVyxHQUFHO0FBQUEsRUFBQyxFQUNoQixLQUFLLENBQUMsV0FBVTtBQUNqQixXQUFPLE9BQU8sQ0FBQyxFQUFFLFVBQVUsSUFBSSxRQUFRLFFBQVEsS0FBSyxLQUFLLEdBQUc7QUFBQSxFQUM1RCxDQUFDO0FBRUQsU0FBTztBQUNYOyIsCiAgIm5hbWVzIjogW10KfQo=\n";
+    const blob = new Blob([code], { type: 'text/javascript' });
+    const url = URL.createObjectURL(blob);
+
+    const BABYLON = window.BABYLON;
+    const canvas = document.getElementById('renderCanvas');
+
+    // Import your bundled app (which exports createScene / default)
+    const mod = await import(url);
+
+    let engine = null;
+    if (typeof mod.createEngine === 'function') {
+      try { engine = await mod.createEngine(); } catch {}
+    }
+    if (!engine) {
+      engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
+    }
+    window.engine = engine; window.canvas = canvas;
+
+    let createScene = mod.createScene || mod.default;
+    if (!createScene && mod.Playground?.CreateScene) createScene = (e,c)=>mod.Playground.CreateScene(e,c);
+    if (!createScene) throw new Error('No createScene() export found.');
+
+    const scene = await (createScene(engine, canvas) ?? createScene());
+    engine.runRenderLoop(()=>scene.render());
+    addEventListener('resize', ()=>engine.resize());
+
+    addEventListener('unload', ()=> URL.revokeObjectURL(url));
+  </script>
+</body>
+</html>
